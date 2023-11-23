@@ -439,3 +439,13 @@ def create_multiscale_flow():
 def print_num_params(model):
     num_params = sum([np.prod(p.shape) for p in model.parameters()])
     print("Number of parameters: {:,}".format(num_params))
+
+    
+transform = transforms.Compose([transforms.ToTensor(),
+                                discretize])
+train_dataset = MNIST(root=DATASET_PATH, train=True, transform=transform, download=True)
+train_set, val_set = torch.utils.data.random_split(train_dataset, [50000, 10000])
+test_set = MNIST(root=DATASET_PATH, train=False, transform=transform, download=True)
+train_loader = data.DataLoader(train_set, batch_size=256, shuffle=False, drop_last=False)
+val_loader = data.DataLoader(val_set, batch_size=64, shuffle=False, drop_last=False, num_workers=4)
+test_loader = data.DataLoader(test_set, batch_size=64, shuffle=False, drop_last=False, num_workers=4)
